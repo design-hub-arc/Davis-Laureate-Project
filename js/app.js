@@ -439,12 +439,55 @@ function setCurrentPosition( position ) {
   })
 }
 
+function locationPermissionInstructions() {
+  let main = document.querySelector('main')
+  let div = document.createElement('div')
+  div.innerHTML = `<h4>Location Services must be turned on for the App to work</h4>
+  <ol style="padding: 1em; font-size: 1.2em">
+    <li>Launch <b><em>Phone Settings</em></b> app on your device.</li>
+    <li>Open the <b><em>Privacy</em></b> menu and choose the <b><em>Location Services</em></b> sub-menu</li>
+    <li>Enable the <b><em>Location Services</em></b> toggle</li>
+    <li>Scroll down on the <b><em>Location Services</em></b> page, and select your <em>Browser</em> from the list</li>
+    <li>Choose either <b><em>Ask Next Time</em></b> or <b><em>While Using the App</em></b></li>
+    <li>After tracking is allowed, please <b><em>Refresh<em></b> the App or Browser</li>
+  </ol>
+  <div id="button-wrapper">
+    <button id="close-popup">DISMISS</button>
+  </div>
+  `
+  div.style.position = 'absolute'
+  div.style.width = '80vw'
+  div.style.padding = '1em'
+  div.style.margin = '1em'
+  div.style.zIndex = '2'
+  div.style.top = '0'
+  div.style.left = '50%'
+  div.style.transform = 'translate(-50%)'
+  div.style.background = 'hsla(0, 0%, 30%, .7)'
+  div.style.borderRadius = '12px'
+  div.style.color ='#fff'
+  main.appendChild(div)
+  let button = document.getElementById('close-popup')
+  let btnWrapper = document.getElementById('button-wrapper')
+  btnWrapper.style.display = 'flex'
+  btnWrapper.style.flexFlow = 'column'
+  btnWrapper.style.justifyContent = 'center'
+  button.style.padding = '1em'
+  button.style.textAlign = 'center'
+  button.addEventListener('click', ()=> {
+    div.style.display = 'none'
+  })
+}
+
 // error handling
 function positionError( error ) {
   switch (error.code) {
     case error.PERMISSION_DENIED:
 
       console.error("User denied the request for Geolocation")
+      if(/Android|Pixel|iPhone|iPad|iPod/i.test(navigator.userAgent)){
+        locationPermissionInstructions()
+      }
       break;
 
     case error.POSITION_UNAVAILABLE:
